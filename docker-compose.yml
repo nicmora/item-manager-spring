@@ -1,8 +1,19 @@
-version: "3.9"
 services:
+  app:
+    build: .
+    container_name: app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    networks:
+      - net
+
   mongodb:
     container_name: mongodb
     image: mongo:7
+    restart: unless-stopped
     ports:
       - "27017:27017"
     environment:
@@ -10,6 +21,12 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
       - db:/data/db
+    networks:
+      - net
 
 volumes:
   db:
+
+networks:
+  net:
+    driver: bridge
