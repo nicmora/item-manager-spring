@@ -3,6 +3,7 @@ package com.nicmora.itemmanagerspring.service;
 import com.nicmora.itemmanagerspring.domain.dto.ItemDTO;
 import com.nicmora.itemmanagerspring.domain.dto.ItemRequestDTO;
 import com.nicmora.itemmanagerspring.domain.entity.Item;
+import com.nicmora.itemmanagerspring.exception.ResourceAlreadyExistsException;
 import com.nicmora.itemmanagerspring.exception.ResourceNotFoundException;
 import com.nicmora.itemmanagerspring.mapper.ItemMapper;
 import com.nicmora.itemmanagerspring.repository.ItemRepository;
@@ -19,27 +20,31 @@ public class ItemService {
     private final ItemMapper itemMapper;
 
     public Flux<ItemDTO> getAll() {
-        return itemRepository.findAll().map(itemMapper);
+        return itemRepository.findAll()
+                .map(itemMapper);
     }
 
     public Mono<ItemDTO> getByName(String name) {
-        return itemRepository.findByName(name).map(itemMapper);
+        return itemRepository.findByName(name)
+                .map(itemMapper);
     }
 
     public Mono<ItemDTO> create(ItemRequestDTO itemRequestDTO) {
-        return Mono.just(itemRequestDTO)
-                .map(newItem -> new Item(newItem.getName(), newItem.getPrice()))
-                .flatMap(item -> itemRepository.save(item).map(itemMapper));
+        return itemRepository.existsByName(itemRequestDTO.getName())
+                .filter(exists -> !exists)
+                .map(notExists -> new Item(itemRequestDTO.getName(), itemRequestDTO.getPrice()))
+                .flatMap(itemRepository::save)
+                .map(itemMapper)
+                .switchIfEmpty(Mono.defer(() -> Mono.error(new ResourceAlreadyExistsException("Item already exists"))));
     }
 
 
     public Mono<ItemDTO> updateByName(String name, ItemRequestDTO itemRequestDTO) {
         return itemRepository.findByName(name)
-                .map(item -> {
-                    item.setName(itemRequestDTO.getName());
-                    item.setPrice(itemRequestDTO.getPrice());
-                    return item;
-                })
+                .map(existingItem -> existingItem.toBuilder()
+                        .name(itemRequestDTO.getName())
+                        .price(itemRequestDTO.getPrice())
+                        .build())
                 .flatMap(itemRepository::save)
                 .map(itemMapper)
                 .switchIfEmpty(Mono.defer(() -> Mono.error(new ResourceNotFoundException("Item not found"))));

@@ -3,8 +3,8 @@ package com.nicmora.itemmanagerspring.domain.dto;
 import lombok.Builder;
 import lombok.Data;
 
-@Builder
 @Data
+@Builder(toBuilder = true)
 public class ItemDTO {
 
     private String name;
