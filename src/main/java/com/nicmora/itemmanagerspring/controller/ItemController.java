@@ -23,10 +23,8 @@ public class ItemController {
     }
 
     @GetMapping("/{name}")
-    public Mono<ResponseEntity<ItemDTO>> getByName(@PathVariable String name) {
-        return itemService.getByName(name)
-                .map(itemDTO -> ResponseEntity.ok().body(itemDTO))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+    public Mono<ItemDTO> getByName(@PathVariable String name) {
+        return itemService.getByName(name);
     }
 
     @PostMapping
@@ -36,10 +34,9 @@ public class ItemController {
     }
 
     @PutMapping("/{name}")
-    public Mono<ResponseEntity<ItemDTO>> updateByName(@PathVariable String name,
-                                                      @RequestBody ItemRequestDTO itemRequestDTO) {
-        return itemService.updateByName(name, itemRequestDTO)
-                .map(item -> ResponseEntity.ok().body(item));
+    public Mono<ItemDTO> updateByName(@PathVariable String name,
+                                      @RequestBody ItemRequestDTO itemRequestDTO) {
+        return itemService.updateByName(name, itemRequestDTO);
     }
 
     @DeleteMapping("/{name}")

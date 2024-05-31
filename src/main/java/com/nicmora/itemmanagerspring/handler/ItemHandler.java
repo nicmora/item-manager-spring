@@ -1,8 +1,10 @@
 package com.nicmora.itemmanagerspring.handler;
 
 import com.nicmora.itemmanagerspring.domain.dto.ItemDTO;
+import com.nicmora.itemmanagerspring.domain.dto.ItemRequestDTO;
 import com.nicmora.itemmanagerspring.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -27,11 +29,32 @@ public class ItemHandler {
         return itemService.getByName(name)
                 .flatMap(itemDTO -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(itemDTO))
-                .switchIfEmpty(ServerResponse.notFound().build());
+                        .bodyValue(itemDTO));
     }
 
     public Mono<ServerResponse> create(ServerRequest request) {
-        return ServerResponse.ok().build();
+        return request.bodyToMono(ItemRequestDTO.class)
+                .flatMap(itemService::create)
+                .flatMap(itemDTO -> ServerResponse.status(HttpStatus.CREATED)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(itemDTO));
     }
+
+    public Mono<ServerResponse> updateByName(ServerRequest request) {
+        String name = request.pathVariable("name");
+
+        return request.bodyToMono(ItemRequestDTO.class)
+                .flatMap(itemRequestDTO -> itemService.updateByName(name, itemRequestDTO))
+                .flatMap(itemDTO -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(itemDTO));
+    }
+
+    public Mono<ServerResponse> deleteByName(ServerRequest request) {
+        String name = request.pathVariable("name");
+
+        return itemService.deleteByName(name)
+                .then(Mono.defer(() -> ServerResponse.noContent().build()));
+    }
+
 }

@@ -26,7 +26,8 @@ public class ItemService {
 
     public Mono<ItemDTO> getByName(String name) {
         return itemRepository.findByName(name)
-                .map(itemMapper);
+                .map(itemMapper)
+                .switchIfEmpty(Mono.defer(() -> Mono.error(new ResourceNotFoundException("Item not found"))));
     }
 
     public Mono<ItemDTO> create(ItemRequestDTO itemRequestDTO) {
@@ -41,17 +42,19 @@ public class ItemService {
 
     public Mono<ItemDTO> updateByName(String name, ItemRequestDTO itemRequestDTO) {
         return itemRepository.findByName(name)
-                .map(existingItem -> existingItem.toBuilder()
+                .switchIfEmpty(Mono.defer(() -> Mono.error(new ResourceNotFoundException("Item not found"))))
+                .map(item -> item.toBuilder()
                         .name(itemRequestDTO.getName())
                         .price(itemRequestDTO.getPrice())
                         .build())
                 .flatMap(itemRepository::save)
-                .map(itemMapper)
-                .switchIfEmpty(Mono.defer(() -> Mono.error(new ResourceNotFoundException("Item not found"))));
+                .map(itemMapper);
     }
 
     public Mono<Void> deleteByName(String name) {
-        return itemRepository.deleteByName(name);
+        return itemRepository.findByName(name)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Item not found")))
+                .flatMap(itemRepository::delete);
     }
 
 }

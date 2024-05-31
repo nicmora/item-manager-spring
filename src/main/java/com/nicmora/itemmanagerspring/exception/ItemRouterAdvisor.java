@@ -1,14 +1,14 @@
 package com.nicmora.itemmanagerspring.exception;
 
-import com.nicmora.itemmanagerspring.controller.ItemController;
+import com.nicmora.itemmanagerspring.handler.ItemHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import reactor.core.publisher.Mono;
 
-@RestControllerAdvice(assignableTypes = ItemController.class)
-public class ItemControllerAdvisor {
+@RestControllerAdvice(assignableTypes = ItemHandler.class)
+public class ItemRouterAdvisor {
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public Mono<ResponseEntity<String>> resourceAlreadyExistsException(ResourceAlreadyExistsException ex) {

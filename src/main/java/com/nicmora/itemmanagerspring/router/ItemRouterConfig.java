@@ -17,8 +17,8 @@ public class ItemRouterConfig {
                         .GET("", itemHandler::getAll)
                         .GET("/{name}", itemHandler::getByName)
                         .POST("", itemHandler::create)
-//                        .PUT("/{name}", null)
-//                        .DELETE("/{name}", null)
+                        .PUT("/{name}", itemHandler::updateByName)
+                        .DELETE("/{name}", itemHandler::deleteByName)
                         .build())
                 .build();
     }
