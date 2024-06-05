@@ -1,11 +1,11 @@
 package com.nicmora.itemmanagerspring.security.service;
 
-import com.nicmora.itemmanagerspring.security.dto.CreateUserDTO;
+import com.nicmora.itemmanagerspring.security.dto.SignUpDTO;
 import com.nicmora.itemmanagerspring.security.dto.LoginDTO;
 import com.nicmora.itemmanagerspring.security.dto.TokenDTO;
 import com.nicmora.itemmanagerspring.security.dto.UserDTO;
 import com.nicmora.itemmanagerspring.security.entity.User;
-import com.nicmora.itemmanagerspring.security.enums.Role;
+import com.nicmora.itemmanagerspring.security.entity.Role;
 import com.nicmora.itemmanagerspring.security.exception.BadRequestException;
 import com.nicmora.itemmanagerspring.security.jwt.JwtProvider;
 import com.nicmora.itemmanagerspring.security.mapper.UserMapper;
@@ -35,13 +35,13 @@ public class UserService {
                 .switchIfEmpty(Mono.error(new BadCredentialsException("Invalid username or password")));
     }
 
-    public Mono<UserDTO> create(CreateUserDTO createUserDTO) {
-        return userRepository.existsByUsernameOrEmail(createUserDTO.username(), createUserDTO.email())
+    public Mono<UserDTO> signup(SignUpDTO signUpDTO) {
+        return userRepository.existsByUsernameOrEmail(signUpDTO.username(), signUpDTO.email())
                 .filter(exists -> !exists)
                 .map(notExists -> User.builder()
-                        .username(createUserDTO.username())
-                        .password(passwordEncoder.encode(createUserDTO.password()))
-                        .email(createUserDTO.email())
+                        .username(signUpDTO.username())
+                        .password(passwordEncoder.encode(signUpDTO.password()))
+                        .email(signUpDTO.email())
                         .roles(Role.ROLE_USER.name())
                         .build())
                 .flatMap(userRepository::save)

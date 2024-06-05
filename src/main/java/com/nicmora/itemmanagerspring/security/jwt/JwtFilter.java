@@ -10,6 +10,10 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+/**
+ * This class, implemented as a web filter in Spring, integrates directly into the filtering chain of incoming requests.
+ */
+
 @Slf4j
 @Component
 public class JwtFilter implements WebFilter {
@@ -19,7 +23,7 @@ public class JwtFilter implements WebFilter {
         ServerHttpRequest request = exchange.getRequest();
 
         String path = request.getPath().value();
-        if (path.contains("auth") || path.contains("health")) {
+        if (path.endsWith("/auth/login") || path.endsWith("/auth/signup") || path.endsWith("/health")) {
             return chain.filter(exchange);
         }
 
@@ -27,7 +31,6 @@ public class JwtFilter implements WebFilter {
         if (auth == null) {
             return Mono.error(new BadRequestException("no token was found"));
         }
-
         if (!auth.startsWith("Bearer ")) {
             return Mono.error(new BadRequestException("invalid auth"));
         }

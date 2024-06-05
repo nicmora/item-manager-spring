@@ -12,8 +12,13 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+/**
+ * This class implements the ReactiveAuthenticationManager interface, integrating with Spring Security and working together with the JWT provider (JwtProvider).
+ * Its main functions include authenticating the credentials provided in a JWT token, retrieving the claims associated with the token and mapping them to authority roles,
+ * as well as handling potential errors, such as an invalid token.
+ */
 
 @Slf4j
 @Component
@@ -23,6 +28,7 @@ public class JwtAuthenticationManager implements ReactiveAuthenticationManager {
     private final JwtProvider jwtProvider;
 
     @Override
+    @SuppressWarnings("unchecked")
     public Mono<Authentication> authenticate(Authentication authentication) {
         return Mono.just(authentication)
                 .map(auth -> jwtProvider.getClaims(auth.getCredentials().toString()))
@@ -34,8 +40,8 @@ public class JwtAuthenticationManager implements ReactiveAuthenticationManager {
                                 .flatMap(role -> role.stream()
                                         .map(r -> r.get("authority"))
                                         .map(SimpleGrantedAuthority::new))
-                                .collect(Collectors.toList())
-                ));
+                                .toList())
+                );
     }
 
 }

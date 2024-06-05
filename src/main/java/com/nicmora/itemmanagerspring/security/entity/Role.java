@@ -1,4 +1,4 @@
-package com.nicmora.itemmanagerspring.security.enums;
+package com.nicmora.itemmanagerspring.security.entity;
 
 public enum Role {
 

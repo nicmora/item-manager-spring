@@ -1,6 +1,6 @@
 package com.nicmora.itemmanagerspring.security.controller;
 
-import com.nicmora.itemmanagerspring.security.dto.CreateUserDTO;
+import com.nicmora.itemmanagerspring.security.dto.SignUpDTO;
 import com.nicmora.itemmanagerspring.security.dto.LoginDTO;
 import com.nicmora.itemmanagerspring.security.dto.TokenDTO;
 import com.nicmora.itemmanagerspring.security.dto.UserDTO;
@@ -23,9 +23,9 @@ public class AuthController {
         return userService.login(loginDTO);
     }
 
-    @PostMapping("/create")
-    public Mono<UserDTO> create(@RequestBody CreateUserDTO createUserDTO) {
-        return userService.create(createUserDTO);
+    @PostMapping("/signup")
+    public Mono<UserDTO> create(@RequestBody SignUpDTO signUpDTO) {
+        return userService.signup(signUpDTO);
     }
 
 }

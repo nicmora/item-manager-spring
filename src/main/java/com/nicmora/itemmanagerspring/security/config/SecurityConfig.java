@@ -28,15 +28,13 @@ public class SecurityConfig {
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers("/health").permitAll()
                         .pathMatchers("/auth/**").permitAll()
-                        .pathMatchers("/item-manager-spring/health").permitAll()
-                        .pathMatchers("/item-manager-spring/auth/**").permitAll()
                         .anyExchange().authenticated())
-                .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .addFilterAfter(jwtFilter, SecurityWebFiltersOrder.FIRST)
                 .securityContextRepository(securityContextRepository)
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .logout(ServerHttpSecurity.LogoutSpec::disable)
-                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .build();
     }
 

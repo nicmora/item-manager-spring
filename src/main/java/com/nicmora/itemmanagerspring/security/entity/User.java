@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 @Document
 @Data
@@ -27,37 +28,33 @@ public class User implements UserDetails {
     private String password;
     private String email;
     private String roles;
-
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private boolean enabled;
+    private Boolean status;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(roles.split(","))
+        return Stream.of(roles.split(", "))
                 .map(SimpleGrantedAuthority::new)
                 .toList();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return accountNonExpired;
+        return status;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return accountNonLocked;
+        return status;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+        return status;
     }
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return status;
     }
 
 }

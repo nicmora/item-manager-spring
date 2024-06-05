@@ -11,6 +11,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * This class plays a crucial role in managing the security context in our application. By implementing the ServerSecurityContextRepository interface,
+ * it works closely with the JWT authentication manager (JwtAuthenticationManager).
+ * Its main functions include storing and loading the security context during request exchanges.
+ */
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -26,9 +32,9 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
     @Override
     public Mono<SecurityContext> load(ServerWebExchange exchange) {
         String token = exchange.getAttribute("token");
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(token, token);
 
-        return jwtAuthenticationManager.authenticate(usernamePasswordAuthenticationToken)
+        return jwtAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(token, token))
                 .map(SecurityContextImpl::new);
     }
+
 }
