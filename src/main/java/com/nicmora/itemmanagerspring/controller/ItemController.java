@@ -1,7 +1,7 @@
 package com.nicmora.itemmanagerspring.controller;
 
-import com.nicmora.itemmanagerspring.domain.dto.ItemDTO;
-import com.nicmora.itemmanagerspring.domain.dto.ItemRequestDTO;
+import com.nicmora.itemmanagerspring.dto.ItemDTO;
+import com.nicmora.itemmanagerspring.dto.ItemRequestDTO;
 import com.nicmora.itemmanagerspring.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.nicmora.itemmanagerspring.domain.dto;
+package com.nicmora.itemmanagerspring.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;

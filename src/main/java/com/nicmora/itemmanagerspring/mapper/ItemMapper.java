@@ -1,7 +1,7 @@
 package com.nicmora.itemmanagerspring.mapper;
 
-import com.nicmora.itemmanagerspring.domain.dto.ItemDTO;
-import com.nicmora.itemmanagerspring.domain.entity.Item;
+import com.nicmora.itemmanagerspring.dto.ItemDTO;
+import com.nicmora.itemmanagerspring.entity.Item;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;

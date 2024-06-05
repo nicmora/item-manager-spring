@@ -1,8 +1,8 @@
 package com.nicmora.itemmanagerspring.service;
 
-import com.nicmora.itemmanagerspring.domain.dto.ItemDTO;
-import com.nicmora.itemmanagerspring.domain.dto.ItemRequestDTO;
-import com.nicmora.itemmanagerspring.domain.entity.Item;
+import com.nicmora.itemmanagerspring.dto.ItemDTO;
+import com.nicmora.itemmanagerspring.dto.ItemRequestDTO;
+import com.nicmora.itemmanagerspring.entity.Item;
 import com.nicmora.itemmanagerspring.exception.ResourceAlreadyExistsException;
 import com.nicmora.itemmanagerspring.exception.ResourceNotFoundException;
 import com.nicmora.itemmanagerspring.mapper.ItemMapper;
